@@ -6,17 +6,11 @@ import {
   useStylesScoped$,
 } from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
-import { Todo } from "~/components/todo";
+import { TodoStatus } from "~/components/todo-status";
 import { TodoInput } from "~/components/todo-input";
 import styles from "./flower.css?inline";
-
-export const LOCAL_STORAGE_KEY = "todos";
-
-type Todo = {
-  label: string;
-  id: number;
-  completed: boolean;
-};
+import { Todo } from "~/types/Todo";
+import { readFromLocalStorage, saveToLocalStorage } from "~/utils/localStorage";
 
 type LoadableTodos =
   | {
@@ -42,16 +36,6 @@ export default component$(() => {
   useStylesScoped$(styles);
   const store = useStore<LoadableTodos>({ isLoading: true, todos: [] });
 
-  const readFromLocalStorage = $(() => {
-    const fromLocalStorage = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const todos = JSON.parse(fromLocalStorage ?? "[]") as Todo[];
-    return todos;
-  });
-
-  const saveToLocalStorage = $(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(store.todos));
-  });
-
   useClientEffect$(async () => {
     store.todos = await readFromLocalStorage();
     store.isLoading = false;
@@ -65,7 +49,7 @@ export default component$(() => {
     store.todos = store.todos.map((todo) =>
       todo.id === id ? markCompleted(todo) : todo
     );
-    saveToLocalStorage();
+    saveToLocalStorage(store.todos);
   });
 
   const handleAddTodo$ = $((label: string) => {
@@ -76,7 +60,7 @@ export default component$(() => {
     };
 
     store.todos = [...store.todos, todo];
-    saveToLocalStorage();
+    saveToLocalStorage(store.todos);
   });
 
   return (
@@ -89,7 +73,7 @@ export default component$(() => {
         <span>There are not Todos</span>
       ) : (
         store.todos.map((todo) => (
-          <Todo
+          <TodoStatus
             key={todo.id}
             {...todo}
             handleMarkCompleted$={() => markCompleted$(todo.id)}
