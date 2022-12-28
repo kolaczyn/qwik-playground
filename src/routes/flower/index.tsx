@@ -37,6 +37,15 @@ export default component$(() => {
     );
   });
 
+  const handleAddTodo = $(() => {
+    const todo: Todo = {
+      completed: false,
+      id: Math.random(),
+      label: "Newest todo",
+    };
+    store.todos = [...store.todos, todo];
+  });
+
   return (
     <>
       <span>Here are todos</span>
@@ -54,10 +63,16 @@ export default component$(() => {
             class={todo.completed ? "completed" : ""}
             for={`todo-${todo.id}`}
           >
-            {todo.label} is {todo.completed ? "completed" : "not completed"}
+            <b>{todo.label} </b>
+            <span>is {todo.completed ? "completed" : "not completed"}</span>
           </label>
         </div>
       ))}
+      <hr />
+
+      <label for="add-todo-input">Add new Todo</label>
+      <input placeholder="..." id="add-todo-input" />
+      <button onClick$={handleAddTodo}>Add todo</button>
     </>
   );
 });
