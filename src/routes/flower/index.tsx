@@ -6,6 +6,7 @@ import {
   useStylesScoped$,
 } from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
+import { Todo } from "~/components/todo";
 import styles from "./flower.css?inline";
 
 type Todo = {
@@ -65,19 +66,7 @@ export default component$(() => {
       <hr />
       {store.todos.map((todo) => (
         <div key={todo.id}>
-          <input
-            type="checkbox"
-            id={`todo-${todo.id}`}
-            checked={todo.completed}
-            onClick$={() => markCompleted(todo.id)}
-          />
-          <label
-            class={todo.completed ? "completed" : ""}
-            for={`todo-${todo.id}`}
-          >
-            <b>{todo.label} </b>
-            <span>is {todo.completed ? "completed" : "not completed"}</span>
-          </label>
+          <Todo {...todo} handleMarkCompleted={markCompleted} />
         </div>
       ))}
       <hr />
