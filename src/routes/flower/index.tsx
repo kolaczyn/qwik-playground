@@ -35,7 +35,7 @@ export default component$(() => {
     input: "",
   });
 
-  const markCompleted = $((id: number) => {
+  const markCompleted$ = $((id: number) => {
     const markCompleted = (todo: Todo) => ({
       ...todo,
       completed: !todo.completed,
@@ -65,9 +65,7 @@ export default component$(() => {
       <span>Here are todos</span>
       <hr />
       {store.todos.map((todo) => (
-        <div key={todo.id}>
-          <Todo {...todo} handleMarkCompleted={markCompleted} />
-        </div>
+        <Todo {...todo} handleMarkCompleted$={() => markCompleted$(todo.id)} />
       ))}
       <hr />
 
