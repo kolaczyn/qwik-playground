@@ -1,4 +1,10 @@
-import { $, component$, useStore, useStylesScoped$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  QwikChangeEvent,
+  useStore,
+  useStylesScoped$,
+} from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
 import styles from "./flower.css?inline";
 
@@ -23,8 +29,9 @@ export const exampleTodos: Todo[] = [
 
 export default component$(() => {
   useStylesScoped$(styles);
-  const store = useStore<{ todos: Todo[] }>({
+  const store = useStore<{ todos: Todo[]; input: string }>({
     todos: exampleTodos,
+    input: "",
   });
 
   const markCompleted = $((id: number) => {
@@ -41,9 +48,15 @@ export default component$(() => {
     const todo: Todo = {
       completed: false,
       id: Math.random(),
-      label: "Newest todo",
+      label: store.input,
     };
+
     store.todos = [...store.todos, todo];
+    store.input = "";
+  });
+
+  const handleInputChange = $((e: QwikChangeEvent<HTMLInputElement>) => {
+    store.input = e.target.value;
   });
 
   return (
@@ -52,7 +65,6 @@ export default component$(() => {
       <hr />
       {store.todos.map((todo) => (
         <div key={todo.id}>
-          {/* TODO add styles */}
           <input
             type="checkbox"
             id={`todo-${todo.id}`}
@@ -71,7 +83,12 @@ export default component$(() => {
       <hr />
 
       <label for="add-todo-input">Add new Todo</label>
-      <input placeholder="..." id="add-todo-input" />
+      <input
+        value={store.input}
+        onChange$={handleInputChange}
+        placeholder="..."
+        id="add-todo-input"
+      />
       <button onClick$={handleAddTodo}>Add todo</button>
     </>
   );
