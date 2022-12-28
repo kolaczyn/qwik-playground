@@ -16,7 +16,7 @@ export const Todo = component$(
         checked={completed}
         onClick$={() => handleMarkCompleted$(id)}
       />
-      <label class={completed ? "completed" : ""} for={`${id}`}>
+      <label class={completed ? "completed" : ""} for={`todo-${id}`}>
         <b>{label} </b>
         <span>is {completed ? "completed" : "not completed"}</span>
       </label>
