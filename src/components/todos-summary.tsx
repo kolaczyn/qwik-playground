@@ -1,19 +1,13 @@
 import { component$ } from "@builder.io/qwik";
 import { Todo } from "~/types/Todo";
+import { getSummary } from "~/utils/getSummary";
 
 type Props = {
   todos: Todo[];
 };
 
 export const TodosSummary = component$(({ todos }: Props) => {
-  const completed = todos.reduce(
-    (acc, todo) => (todo.completed ? acc + 1 : acc),
-    0
-  );
-  const notCompleted = todos.reduce(
-    (acc, curr) => (!curr.completed ? acc + 1 : acc),
-    0
-  );
+  const { completed, notCompleted, total } = getSummary(todos);
   return (
     <>
       <span>Completed: </span>
@@ -23,7 +17,7 @@ export const TodosSummary = component$(({ todos }: Props) => {
       <b>{notCompleted}</b>
       <br />
       <span>In Total:</span>
-      <b>{todos.length}</b>
+      <b>{total}</b>
     </>
   );
 });
