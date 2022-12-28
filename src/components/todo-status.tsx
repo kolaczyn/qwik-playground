@@ -4,7 +4,7 @@ type Props = {
   id: number;
   completed: boolean;
   label: string;
-  handleMarkCompleted$: QRL<(id: number) => void>;
+  handleMarkCompleted$: QRL<() => void>;
 };
 
 export const TodoStatus = component$(
@@ -14,7 +14,7 @@ export const TodoStatus = component$(
         type="checkbox"
         id={`todo-${id}`}
         checked={completed}
-        onClick$={() => handleMarkCompleted$(id)}
+        onClick$={() => handleMarkCompleted$()}
       />
       <label class={completed ? "completed" : ""} for={`todo-${id}`}>
         <b>{label} </b>

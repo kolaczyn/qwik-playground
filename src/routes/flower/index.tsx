@@ -11,33 +11,14 @@ import { TodoInput } from "~/components/todo-input";
 import styles from "./flower.css?inline";
 import { Todo } from "~/types/Todo";
 import { readFromLocalStorage, saveToLocalStorage } from "~/utils/localStorage";
-
-type LoadableTodos =
-  | {
-      isLoading: true;
-      todos: [];
-    }
-  | { isLoading: false; todos: Todo[] };
-
-export const exampleTodos: Todo[] = [
-  {
-    label: "Learn React",
-    id: 0,
-    completed: true,
-  },
-  {
-    label: "Learn Qwik",
-    id: 1,
-    completed: false,
-  },
-];
+import { LoadableTodos } from "~/types/LoadableTodos";
 
 export default component$(() => {
   useStylesScoped$(styles);
   const store = useStore<LoadableTodos>({ isLoading: true, todos: [] });
 
   useClientEffect$(async () => {
-    store.todos = await readFromLocalStorage();
+    store.todos = readFromLocalStorage();
     store.isLoading = false;
   });
 
@@ -75,12 +56,13 @@ export default component$(() => {
         store.todos.map((todo) => (
           <TodoStatus
             key={todo.id}
-            {...todo}
+            completed={todo.completed}
+            id={todo.id}
+            label={todo.label}
             handleMarkCompleted$={() => markCompleted$(todo.id)}
           />
         ))
       )}
-      <hr />
 
       <label for="add-todo-input">Add new Todo</label>
       <TodoInput handleAddTodo$={handleAddTodo$} />
