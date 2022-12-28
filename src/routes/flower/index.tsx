@@ -6,7 +6,7 @@ import {
   useStylesScoped$,
 } from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
-import { TodoStatus } from "~/components/todo-status";
+import { SingleTodo } from "~/components/single-todo";
 import { TodoInput } from "~/components/todo-input";
 import styles from "./flower.css?inline";
 import { Todo } from "~/types/Todo";
@@ -15,7 +15,10 @@ import { LoadableTodos } from "~/types/LoadableTodos";
 
 export default component$(() => {
   useStylesScoped$(styles);
-  const store = useStore<LoadableTodos>({ isLoading: true, todos: [] });
+  const store = useStore<LoadableTodos>({
+    isLoading: true,
+    todos: [],
+  });
 
   useClientEffect$(async () => {
     store.todos = readFromLocalStorage();
@@ -54,7 +57,7 @@ export default component$(() => {
         <span>There are not Todos</span>
       ) : (
         store.todos.map((todo) => (
-          <TodoStatus
+          <SingleTodo
             key={todo.id}
             completed={todo.completed}
             id={todo.id}

@@ -7,7 +7,7 @@ type Props = {
   handleMarkCompleted$: QRL<() => void>;
 };
 
-export const TodoStatus = component$(
+export const SingleTodo = component$(
   ({ completed, id, label, handleMarkCompleted$ }: Props) => (
     <div>
       <input
