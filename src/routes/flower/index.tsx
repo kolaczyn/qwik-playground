@@ -1,5 +1,6 @@
-import { $, component$, useStore } from "@builder.io/qwik";
+import { $, component$, useStore, useStylesScoped$ } from "@builder.io/qwik";
 import { DocumentHead } from "@builder.io/qwik-city";
+import styles from "./flower.css?inline";
 
 type Todo = {
   label: string;
@@ -21,18 +22,18 @@ export const exampleTodos: Todo[] = [
 ];
 
 export default component$(() => {
+  useStylesScoped$(styles);
   const store = useStore<{ todos: Todo[] }>({
     todos: exampleTodos,
   });
 
   const markCompleted = $((id: number) => {
-    store.todos = store.todos.map((x) =>
-      x.id !== id
-        ? x
-        : {
-            ...x,
-            completed: !x.completed,
-          }
+    const markCompleted = (todo: Todo) => ({
+      ...todo,
+      completed: !todo.completed,
+    });
+    store.todos = store.todos.map((todo) =>
+      todo.id === id ? markCompleted(todo) : todo
     );
   });
 
@@ -49,7 +50,10 @@ export default component$(() => {
             checked={todo.completed}
             onClick$={() => markCompleted(todo.id)}
           />
-          <label for={`todo-${todo.id}`}>
+          <label
+            class={todo.completed ? "completed" : ""}
+            for={`todo-${todo.id}`}
+          >
             {todo.label} is {todo.completed ? "completed" : "not completed"}
           </label>
         </div>
